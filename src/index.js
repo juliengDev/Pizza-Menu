@@ -46,7 +46,6 @@ const pizzaData = [
     soldOut: false,
   },
 ];
-
 function App() {
   return (
     <div className="container">
@@ -54,6 +53,43 @@ function App() {
       <Menu />
       <Footer />
     </div>
+  );
+}
+function Menu() {
+  const pizzas = pizzaData.length;
+  return (
+    <main className="menu">
+      <h2>Our menu</h2>
+
+      {pizzas > 0 && (
+        <>
+          <p>
+            Authentic Italian cuisine. 6 creative dishes to choose from. All
+            from our stone oven, all organic, all delicious.
+          </p>
+          <ul className="pizzas">
+            {pizzaData.map((el, id) => (
+              <Pizza key={id} pizzaObj={el} />
+            ))}
+          </ul>
+        </>
+      )}
+    </main>
+  );
+}
+function Pizza({ pizzaObj }) {
+  const { photoName, name, ingredients, price, soldOut } = pizzaObj;
+
+  const pizzaClass = soldOut ? "pizza sold-out" : "pizza";
+  const displayPrice = soldOut ? "SOLD OUT" : `${price + 3}€`;
+
+  return (
+    <li className={pizzaClass}>
+      <img src={photoName} alt={name} />
+      <h3>{name}</h3>
+      <p>{ingredients}</p>
+      <span>{displayPrice}</span>
+    </li>
   );
 }
 
@@ -66,44 +102,43 @@ function Header() {
     </header>
   );
 }
-function Menu() {
-  return (
-    <main className="menu">
-      <h2>Our menu</h2>
-      <Pizza />
-      <Pizza />
-      <Pizza />
-    </main>
-  );
-}
+
 function Footer() {
   const hour = new Date().getHours();
   const openHour = 12;
   const closeHour = 22;
   const isOpen = hour >= openHour && hour <= closeHour;
-  console.log(isOpen);
 
   return (
     <footer className="footer">
-      {" "}
-      {new Date().toLocaleTimeString()} We're currently open
+      {isOpen ? (
+        <Order close={closeHour} open={openHour} />
+      ) : (
+        <p>
+          We're happy to welcome you between {openHour}:00 and {closeHour}:00.
+        </p>
+      )}
     </footer>
   );
-  // return React.createElement("footer", null, "We're currently open!");
 }
 
-function Pizza() {
+function Order({ close, open }) {
   return (
-    <div>
-      <img src="pizzas/spinaci.jpg" alt="Pizza spinaci" />
-      <h3>Pizza Spinaci</h3>
-      <p>Tomato, mozarella, spinach, and ricotta cheese</p>
+    <div className="order">
+      <p>
+        We're open from {open}:00 until {close}:00, Come visit us or order
+        online.
+      </p>
+      <button className="btn">Order</button>
     </div>
   );
 }
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <App />
   </React.StrictMode>
 );
+
+// Authentic Italian cuisine. 6 creative dishes to choose from. All from our stone oven, all organic, all delicious.
